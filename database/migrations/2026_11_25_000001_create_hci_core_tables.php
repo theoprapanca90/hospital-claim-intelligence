@@ -21,7 +21,7 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('hospital_id')->constrained('hospitals')->cascadeOnDelete();
-            $table->uuid('external_patient_ref')->nullable();
+            $table->string('external_patient_ref', 128)->nullable();
             $table->string('source_system', 40)->nullable();
             $table->string('medical_record_no_hash', 128)->nullable();
             $table->string('identity_status', 20)->default('unverified');
