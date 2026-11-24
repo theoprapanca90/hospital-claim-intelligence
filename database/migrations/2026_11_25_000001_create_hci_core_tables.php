@@ -21,14 +21,14 @@ return new class extends Migration
         Schema::create('patients', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('hospital_id')->constrained('hospitals')->cascadeOnDelete();
-            $table->string('external_patient_ref', 128)->nullable();
+            $table->string('external_patient_ref_hash', 128)->nullable();
             $table->string('source_system', 40)->nullable();
             $table->string('medical_record_no_hash', 128)->nullable();
             $table->string('identity_status', 20)->default('unverified');
             $table->timestamps();
             $table->softDeletes();
             $table->index(['hospital_id', 'source_system']);
-            $table->unique(['hospital_id', 'source_system', 'external_patient_ref'], 'patients_source_ref_unique');
+            $table->unique(['hospital_id', 'source_system', 'external_patient_ref_hash'], 'patients_source_ref_unique');
         });
 
         Schema::create('encounters', function (Blueprint $table) {
