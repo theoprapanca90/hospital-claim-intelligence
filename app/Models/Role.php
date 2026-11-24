@@ -1,16 +1,14 @@
 <?php
 
-namespace App\\Models;
+namespace App\Models;
 
-use Illuminate\\Database\\Eloquent\\Model;
-use Illuminate\\Database\\Eloquent\\Relations\\BelongsTo;
-use Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Role extends Model
 {
-    protected $fillable = [
-        'hospital_id', 'slug', 'name', 'scope', 'description', 'is_assignable',
-    ];
+    protected $fillable = ['hospital_id', 'slug', 'name', 'scope', 'description', 'is_assignable'];
 
     protected function casts(): array
     {
@@ -24,7 +22,6 @@ class Role extends Model
 
     public function permissions(): BelongsToMany
     {
-        return $this->belongsToMany(Permission::class, 'role_permissions')
-            ->withTimestamps();
+        return $this->belongsToMany(Permission::class, 'role_permissions')->withTimestamps();
     }
 }
