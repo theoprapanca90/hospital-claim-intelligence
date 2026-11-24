@@ -30,7 +30,7 @@ Status: **foundation scaffold only**. This repository pack is not a deployed or 
 
 ## Current implementation status
 - Documentation scaffold: included in this pack.
-- Laravel application: not generated.
+- Laravel 12 runtime skeleton files: partially added (artisan, public entry point, configuration, routes, users/cache/jobs migrations and test scaffold); Composer/runtime verification pending.
 - MySQL schema/migrations: not implemented.
 - FastAPI service: minimal scaffold included; not integration-tested.
 - Ollama model: not selected or evaluated.
