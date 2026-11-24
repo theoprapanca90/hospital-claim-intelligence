@@ -3,9 +3,11 @@
 ## Milestone 1 — Core foundation (current)
 - [x] Define first-pass relational entities and migration drafts.
 - [x] Define tenancy, provenance and human-review principles.
+- [x] Draft hospital membership and RBAC tables.
+- [x] Define tenant authorization and isolation test matrix.
 - [ ] Generate Laravel 12 application and lock dependencies.
-- [ ] Add authentication, hospital membership and policies.
-- [ ] Add automated migration and authorization tests.
+- [ ] Implement authentication, membership middleware, policies and audit service.
+- [ ] Run MySQL 8.4 migration and authorization tests.
 
 ## Milestone 2 — Clinical workflow
 - [ ] Patient/encounter worklists.
