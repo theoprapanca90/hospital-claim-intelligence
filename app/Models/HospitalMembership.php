@@ -1,29 +1,22 @@
 <?php
 
-namespace App\\Models;
+namespace App\Models;
 
-use Illuminate\\Database\\Eloquent\\Model;
-use Illuminate\\Database\\Eloquent\\Relations\\BelongsTo;
-use Illuminate\\Database\\Eloquent\\Relations\\BelongsToMany;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class HospitalMembership extends Model
 {
     protected $table = 'hospital_memberships';
 
     protected $fillable = [
-        'hospital_id',
-        'user_id',
-        'status',
-        'joined_at',
-        'revoked_at',
+        'hospital_id', 'user_id', 'status', 'joined_at', 'revoked_at',
     ];
 
     protected function casts(): array
     {
-        return [
-            'joined_at' => 'datetime',
-            'revoked_at' => 'datetime',
-        ];
+        return ['joined_at' => 'datetime', 'revoked_at' => 'datetime'];
     }
 
     public function hospital(): BelongsTo
@@ -38,12 +31,9 @@ class HospitalMembership extends Model
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(
-            Role::class,
-            'membership_roles',
-            'hospital_membership_id',
-            'role_id'
-        )->withPivot(['assigned_by', 'assigned_at'])->withTimestamps();
+        return $this->belongsToMany(Role::class, 'membership_roles',
+            'hospital_membership_id', 'role_id')
+            ->withPivot(['assigned_by', 'assigned_at'])->withTimestamps();
     }
 
     public function isActive(): bool
