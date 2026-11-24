@@ -1,11 +1,11 @@
 <?php
 
-namespace App\\Http\\Middleware;
+namespace App\Http\Middleware;
 
-use App\\Models\\HospitalMembership;
+use App\Models\HospitalMembership;
 use Closure;
-use Illuminate\\Http\\Request;
-use Symfony\\Component\\HttpFoundation\\Response;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ResolveHospitalMembership
 {
@@ -26,7 +26,7 @@ class ResolveHospitalMembership
             ->whereNull('revoked_at')
             ->first();
 
-        if (!$membership) {
+        if (!$membership || !$membership->hospital || $membership->hospital->status !== 'active') {
             abort(404);
         }
 
