@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\\Http\\Request;
-use Illuminate\\Support\\Facades\\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('/v1/me', function (Request $request) {
@@ -31,7 +31,13 @@ Route::middleware('auth:sanctum')->group(function (): void {
                         'membership' => [
                             'id' => $membership->id,
                             'status' => $membership->status,
-                            'roles' => $membership->roles->pluck('slug')->values(),
+                            'roles' => $membership->roles
+                                ->filter(fn ($role) => $role->scope === 'system'
+                                    ? $role->hospital_id === null
+                                    : ($role->scope === 'hospital'
+                                        && (string) $role->hospital_id === (string) $membership->hospital_id))
+                                ->pluck('slug')
+                                ->values(),
                         ],
                     ],
                 ]);
