@@ -31,13 +31,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
                         'membership' => [
                             'id' => $membership->id,
                             'status' => $membership->status,
-                            'roles' => $membership->roles
-                                ->filter(fn ($role) => $role->scope === 'system'
-                                    ? $role->hospital_id === null
-                                    : ($role->scope === 'hospital'
-                                        && (string) $role->hospital_id === (string) $membership->hospital_id))
-                                ->pluck('slug')
-                                ->values(),
+                            'roles' => $membership->effectiveRoles()->pluck('slug')->values(),
                         ],
                     ],
                 ]);

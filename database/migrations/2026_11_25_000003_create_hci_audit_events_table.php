@@ -14,7 +14,8 @@ return new class extends Migration
             $table->foreignId('actor_user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('event_type', 80);
             $table->string('subject_type', 120)->nullable();
-            $table->uuid('subject_id')->nullable();
+            // string, bukan uuid: subjek bisa berupa membership/role (bigint) maupun UUID.
+            $table->string('subject_id', 64)->nullable();
             $table->string('request_id', 80)->nullable();
             $table->string('ip_address', 45)->nullable();
             $table->json('metadata')->nullable();

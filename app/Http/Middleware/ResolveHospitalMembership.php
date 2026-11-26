@@ -14,7 +14,7 @@ class ResolveHospitalMembership
         $user = $request->user();
         $hospitalId = $request->route('hospital');
 
-        if (!$user || !is_string($hospitalId)) {
+        if (! $user || ! is_string($hospitalId)) {
             abort(404);
         }
 
@@ -26,7 +26,10 @@ class ResolveHospitalMembership
             ->whereNull('revoked_at')
             ->first();
 
-        if (!$membership || !$membership->hospital || $membership->hospital->status !== 'active') {
+        // Hospital soft-deleted tidak ikut ter-load (SoftDeletes), sehingga null.
+        // 404 yang sama untuk "bukan anggota" dan "RS tidak ada/nonaktif" agar
+        // keberadaan rumah sakit tidak dapat dienumerasi.
+        if (! $membership || ! $membership->hospital || ! $membership->hospital->isActive()) {
             abort(404);
         }
 
