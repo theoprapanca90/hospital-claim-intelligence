@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ClaimController;
+use App\Http\Controllers\EncounterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -35,6 +37,16 @@ Route::middleware('auth:sanctum')->group(function (): void {
                         ],
                     ],
                 ]);
+            });
+
+            Route::middleware('hospital.permission:encounters.read')->group(function (): void {
+                Route::get('/encounters', [EncounterController::class, 'index']);
+                Route::get('/encounters/{encounter}', [EncounterController::class, 'show']);
+            });
+
+            Route::middleware('hospital.permission:claims.read')->group(function (): void {
+                Route::get('/claims', [ClaimController::class, 'index']);
+                Route::get('/claims/{claim}', [ClaimController::class, 'show']);
             });
         });
 });

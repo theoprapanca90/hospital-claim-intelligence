@@ -25,11 +25,18 @@ menjalankan `composer install` (egress ke packagist diblokir) maupun MySQL. Semu
 - `PermissionSeeder`: katalog permission idempotent.
 - Test: `HospitalTenancyTest`, `MembershipRoleServiceTest`, `RoleScopeTest`.
 
+## Lapisan baca-saja klinis (belum diverifikasi runtime)
+- Model `Patient`, `Encounter`, `Claim` (UUID, soft delete) dengan `scopeForHospital()`.
+- `TenantAccess` + `EncounterPolicy` / `ClaimPolicy`: pemeriksaan membership, permission, dan RS aktif secara mandiri (lapisan kedua di luar middleware).
+- Endpoint: `GET /api/v1/hospitals/{hospital}/encounters[/{id}]` (`encounters.read`) dan `.../claims[/{id}]` (`claims.read`). Lookup memakai `forHospital()` sebelum record di-load; resource RS lain mengembalikan 404.
+- Response encounter tanpa identitas pasien; akses list/show tercatat di `audit_events` tanpa data klinis.
+- Test: `ClinicalReadApiTest` (isolasi lintas RS, 403 tanpa permission, soft delete, audit, policy, batas `per_page`).
+
 ## Temuan yang belum diperbaiki (wajib sebelum data pasien)
 1. **Unik role sistem**: `UNIQUE(hospital_id, slug)` tidak mencegah slug ganda untuk role sistem karena MySQL memperlakukan NULL sebagai berbeda. Usulan: kolom generated `coalesce(hospital_id,'system')` + unique index; uji pada MySQL 8.4 sebelum dipakai.
 2. **Integritas lintas tabel**: `claims`, `clinical_documents`, `encounter_diagnoses`, dll. menyimpan `hospital_id` dan `encounter_id` terpisah tanpa constraint bahwa keduanya milik RS yang sama. Perlu FK komposit atau validasi di service.
 3. **Audit append-only di DB**: hanya ditegakkan di aplikasi; butuh user DB tanpa UPDATE/DELETE pada `audit_events`.
-4. **Resource Policies dan query tenant-scoped**: belum ada, karena model Patient/Encounter/Claim belum dibuat.
+4. **Policies untuk aksi tulis** (create/update/review) belum ada; baru baca-saja untuk Encounter dan Claim. Dokumen klinis, diagnosis, dan procedure belum punya model/endpoint.
 5. **Perintah setup admin RS pertama** (teraudit) belum ada.
 6. **Throttling/rate limit** pada route API belum dikonfigurasi.
 7. Test berjalan di SQLite in-memory (`phpunit.xml`); jalankan juga terhadap MySQL 8.4.
