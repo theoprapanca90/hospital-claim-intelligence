@@ -32,8 +32,8 @@ A role assignment is valid only if:
 
 ## Minimum authorization test matrix
 - User A in Hospital A cannot list, read, update, download or export Hospital B resources.
-- User with no membership receives 403 for hospital-scoped routes.
-- Suspended/revoked membership receives 403 immediately.
+- User with no membership receives 404 for hospital-scoped routes (same response as an unknown hospital, so hospital existence cannot be enumerated). A member who lacks the required permission receives 403.
+- Suspended/revoked membership, inactive hospital and soft-deleted hospital receive 404 immediately.
 - Hospital-scoped role from Hospital A cannot be assigned to membership in Hospital B.
 - A role without a required permission cannot perform that action.
 - Changing an identifier in a URL does not bypass tenant scoping.

@@ -30,11 +30,11 @@ Status: **foundation scaffold only**. This repository pack is not a deployed or 
 
 ## Current implementation status
 - Documentation scaffold: included in this pack.
-- Laravel application: not generated.
-- MySQL schema/migrations: not implemented.
+- Laravel 12 runtime skeleton files: partially added (artisan, public entry point, configuration, routes, users/cache/jobs migrations and test scaffold); Composer/runtime verification pending.
+- MySQL schema migrations: HCI tables plus standard users/cache/jobs migrations are present; not yet executed or verified.
 - FastAPI service: minimal scaffold included; not integration-tested.
 - Ollama model: not selected or evaluated.
 - Qdrant collections/RAG pipeline: not implemented.
 - SIMRS API adapters: not implemented.
 - BPJS rules/grouper: not implemented or verified.
-- Security, backup, offline and pilot tests: not performed.
+- Runtime verification, migration execution, security, backup, offline and pilot tests: not performed.
