@@ -33,10 +33,10 @@ Create `apps/web/app/Services/AI/AIClient.php`:
 ```php
 <?php
 
-namespace App\\Services\\AI;
+namespace App\Services\AI;
 
-use Illuminate\\Support\\Facades\\Http;
-use Illuminate\\Http\\Client\\ConnectionException;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 use RuntimeException;
 
 class AIClient
@@ -77,13 +77,12 @@ Create `apps/web/app/Http/Controllers/Api/AIController.php`:
 ```php
 <?php
 
-namespace App\\Http\\Controllers\\Api;
+namespace App\Http\Controllers\Api;
 
-use App\\Http\\Controllers\\Controller;
-use App\\Services\\AI\\AIClient;
-use Illuminate\\Http\\JsonResponse;
-use Illuminate\\Http\\Request;
-use Illuminate\\Validation\\ValidationException;
+use App\Http\Controllers\Controller;
+use App\Services\AI\AIClient;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use RuntimeException;
 
 class AIController extends Controller
@@ -120,8 +119,8 @@ Do not write prompts, responses or patient identifiers to Laravel logs. In the c
 After installing Laravel Sanctum with `php artisan install:api`, add to `apps/web/routes/api.php`:
 
 ```php
-use App\\Http\\Controllers\\Api\\AIController;
-use Illuminate\\Support\\Facades\\Route;
+use App\Http\Controllers\Api\AIController;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth:sanctum', 'throttle:10,1'])
     ->prefix('v1')
