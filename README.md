@@ -30,6 +30,8 @@ Status: **foundation + AI Gateway implementation branch**. This repository is no
 6. Run the FastAPI tests from `services/ai`: `python -m pip install -r requirements.txt && pytest -q`.
 7. Use only synthetic, non-identifiable test content.
 
+If `/ready` cannot reach Ollama from the AI container, check Ollama's network binding. Ollama normally listens on loopback; its official macOS guidance for exposing the server to other local processes is to set `OLLAMA_HOST` with `launchctl` and restart the app. Only do this on a trusted development machine, and restrict port 11434 with the macOS firewall; Ollama's local API does not provide authentication by default. See the [official Ollama FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.mdx).
+
 Qdrant is intentionally optional on an 8 GB Mac: start it later with `docker compose --profile rag up -d qdrant`. The optional Docker Ollama profile is intended for environments where native Ollama is not used; native Ollama is preferred on M1 for Metal acceleration.
 
 ## Important boundaries
