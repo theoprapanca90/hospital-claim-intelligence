@@ -37,11 +37,12 @@ namespace App\Services\AI;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\ConnectionException;
+use Illuminate\Http\Client\RequestException;
 use RuntimeException;
 
 class AIClient
 {
-    public function generate(string $prompt, ?string $systemPrompt = null): array
+    public function generate(string $prompt): array
     {
         $token = config('services.hci_ai.token');
 
@@ -49,21 +50,24 @@ class AIClient
             throw new RuntimeException('HCI AI service token is not configured.');
         }
 
-        $payload = ['prompt' => $prompt];
-
-        if ($systemPrompt !== null) {
-            $payload['system_prompt'] = $systemPrompt;
-        }
-
         try {
-            return Http::acceptJson()
+            $response = Http::acceptJson()
                 ->withHeaders(['X-HCI-Service-Token' => $token])
                 ->connectTimeout(5)
                 ->timeout(config('services.hci_ai.timeout', 130))
-                ->post(rtrim(config('services.hci_ai.url'), '/') . '/v1/generate', $payload)
-                ->throw()
-                ->json();
-        } catch (ConnectionException $exception) {
+                ->post(rtrim(config('services.hci_ai.url'), '/') . '/v1/generate', [
+                    'prompt' => $prompt,
+                ])
+                ->throw();
+
+            $data = $response->json();
+
+            if (! is_array($data)) {
+                throw new RuntimeException('HCI AI Gateway returned an invalid response.');
+            }
+
+            return $data;
+        } catch (ConnectionException|RequestException $exception) {
             throw new RuntimeException('HCI AI Gateway is unavailable.', previous: $exception);
         }
     }
@@ -91,19 +95,13 @@ class AIController extends Controller
     {
         $validated = $request->validate([
             'prompt' => ['required', 'string', 'min:1', 'max:8000'],
-            'system_prompt' => ['nullable', 'string', 'max:2000'],
         ]);
 
         try {
-            $result = $client->generate(
-                $validated['prompt'],
-                $validated['system_prompt'] ?? null
-            );
+            $result = $client->generate($validated['prompt']);
 
             return response()->json(['data' => $result]);
-        } catch (RuntimeException $exception) {
-            report($exception);
-
+        } catch (RuntimeException) {
             return response()->json([
                 'message' => 'AI service is temporarily unavailable.',
             ], 503);
